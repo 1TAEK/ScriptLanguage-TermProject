@@ -2,8 +2,11 @@ from tkinter import*
 
 window = Tk()
 
-background = Frame(window, width=400, height=600, bg='skyblue').pack()
+window.title("날씨어떄")
 
+background = PhotoImage(file = "")
+backgroundLabel = Label(window, image = background)
+backgroundLabel.pack()
 
 window.mainloop()
 
