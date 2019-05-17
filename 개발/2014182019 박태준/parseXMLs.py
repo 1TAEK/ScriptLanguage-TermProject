@@ -75,8 +75,8 @@ def getMiddleTemperature():         # 중기기온조회 xml
         return dom
 
 
-def getSensorytemLifeList():        # 체감온도 xml
-    url = 'http://newsky2.kma.go.kr/iros/RetrieveLifeIndexService3/getSensorytemLifeList'
+def getUltrvLifeList():        # 체감온도 xml
+    url = 'http://newsky2.kma.go.kr/iros/RetrieveLifeIndexService3/getUltrvLifeList'
     queryParams = '?' + 'ServiceKey=8KngOJTE%2Fh%2BjNJwkeXlJsC5d1ShWfQ9YadkSpoLeubDe9cekkO44ShcRAra7hjTk%2BYAzJEui5eYPFVGegxUngw%3D%3D' + \
                   '&areaNo=1100000000&time=2019051706'
 
@@ -94,10 +94,11 @@ def getSensorytemLifeList():        # 체감온도 xml
         xml = resp.read()
         print("XML Document loading complete.")
         dom = parseString(xml)
+        print(dom.toprettyxml())
         return dom
 
 
 # TownDocument = getForecastSpaceData()             # 동네예보 xml DOM 객체에 저장
 # DaysWeatherDoc = getMiddleLandWeather()           # 중기예보 xml DOM 객체에 저장
 # DaysTemperatureDoc = getMiddleTemperature()       # 중기기온 xml DOM 객체에 저장
-SensoryTemperatureDoc = getSensorytemLifeList()     # 체감온도 xml DOM 객체에 저장
+UltRVDoc = getUltrvLifeList()     # 체감온도 xml DOM 객체에 저장
