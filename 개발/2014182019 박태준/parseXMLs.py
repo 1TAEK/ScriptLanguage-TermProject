@@ -98,7 +98,30 @@ def getUltrvLifeList():        # 체감온도 xml
         return dom
 
 
+def CityAirPollution():                 # 시,도별 대기오염지수 xml
+    url = 'http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getCtprvnMesureLIst'
+    queryParams = '?' + 'ServiceKey=8KngOJTE%2Fh%2BjNJwkeXlJsC5d1ShWfQ9YadkSpoLeubDe9cekkO44ShcRAra7hjTk%2BYAzJEui5eYPFVGegxUngw%3D%3D' + \
+                  '&numOfRow=10&pageNo=1&itemCode=PM10&dataGubun=DAILY&searchCondition=WEEK'
+
+    request = urllib.request.Request(url + queryParams)
+
+    try:
+        resp = urllib.request.urlopen(request)
+    except urllib.error.URLError as e:
+        print(e.reason)
+        print(parseString(e.read().decode('utf-8')).toprettyxml())
+    except urllib.error.HTTPError as e:
+        print("error code=" + e.code)
+        print(parseString(e.read().decode('utf-8')).toprettyxml())
+    else:
+        xml = resp.read()
+        print("XML Document loading complete.")
+        dom = parseString(xml)
+        print(dom.toxml())
+        return dom
+
 # TownDocument = getForecastSpaceData()             # 동네예보 xml DOM 객체에 저장
 # DaysWeatherDoc = getMiddleLandWeather()           # 중기예보 xml DOM 객체에 저장
 # DaysTemperatureDoc = getMiddleTemperature()       # 중기기온 xml DOM 객체에 저장
-UltRVDoc = getUltrvLifeList()     # 체감온도 xml DOM 객체에 저장
+# UltRVDoc = getUltrvLifeList()                     # 자외선지수 xml DOM 객체에 저장
+APDoc = CityAirPollution()
