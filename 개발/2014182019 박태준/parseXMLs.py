@@ -48,7 +48,7 @@ def getMiddleLandWeather():     # 중기육상예보 xml (3일~10일 후 예보 
         xml = resp.read()
         print("XML Document loading complete.")
         dom = parseString(xml)
-        # print(dom.toprettyxml())
+        print(dom.toprettyxml())
         return dom
 
 
@@ -74,6 +74,9 @@ def getMiddleTemperature():         # 중기기온조회 xml
         print(dom.toprettyxml())
         return dom
 
+
+def getSensorytemLifeList():        # 체감온도 xml
+    pass
 # TownDocument = getForecastSpaceData()       # 동네예보 xml DOM객체에 저장
-# DaysWeatherDoc = getMiddleLandWeather()     # 중기예보 xml DOM객체에 저장
-DaysTemperatureDoc = getMiddleTemperature()   # 중기기온 xml DOM객체에 저장
+#DaysWeatherDoc = getMiddleLandWeather()     # 중기예보 xml DOM객체에 저장
+# DaysTemperatureDoc = getMiddleTemperature()   # 중기기온 xml DOM객체에 저장
