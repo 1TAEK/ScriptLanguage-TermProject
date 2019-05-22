@@ -7,12 +7,13 @@ import time
 # 2019.05.17 : 필요한 Open API 파싱 완료.
 #              하지만 옵션들 고정적인게 아니라 현재 또는 원하는 date, time 지정해줄 수 있어야 하기 때문에 수정이 필요함.
 # 2019.05.22 : 동네예보 파싱시 date, time 해당시간에 맞게(baseTime에 가장 가까운 예보시간부터) 파싱해옴.
+#              좌표값 또한 바뀌어야 하므로, 추가작업이 필요함.
 
 # base_date = time.strftime('%Y%m%d', time.localtime())
 base_time = time.strftime('%H', time.localtime()) + '00'
 
 
-def get_baseDateAndTime():
+def get_baseDateAndTime():          # 동네예보 base_date, base_time 반환하는 함수
     base_date = time.strftime('%Y%m%d', time.localtime())
     base_time = time.strftime('%H', time.localtime()) + '00'
     if '0000' <= base_time < '0300':
@@ -48,12 +49,6 @@ def parseFcstPerTime():  # 동네예보조회 xml 파싱
     ny = 'ny=127'
 
     params = '?' + serviceKey + '&' + baseDate + '&' + baseTime + '&' + nx + '&' + ny + '&numOfRows=200&pageNo=1'
-
-
-    queryParams = '?' + 'ServiceKey=8KngOJTE%2Fh%2BjNJwkeXlJsC5d1ShWfQ9YadkSpoLeubDe9cekkO44ShcRAra7hjTk%2BYAzJEui5eYPFVGegxUngw%3D%3D' + \
-                  '&base_date=20190521&base_time=2000&nx=60&ny=127&numOfRows=200' \
-                  '&pageNo=1'
-
     request = urllib.request.Request(url + params)
 
     try:
@@ -71,7 +66,7 @@ def parseFcstPerTime():  # 동네예보조회 xml 파싱
         # print(dom.toprettyxml())
         tree = ElementTree.fromstring( str(dom.toxml()))
 
-        return tree, get_baseDateAndTime()
+        return tree
 
 def getMiddleLandWeather():     # 중기육상예보 xml (3일~10일 후 예보 정보 구름많음 등..)
     url = 'http://newsky2.kma.go.kr/service/MiddleFrcstInfoService/getMiddleLandWeather'
@@ -119,10 +114,13 @@ def getMiddleTemperature():         # 중기기온조회 xml
 
 def getUltrvLifeList():        # 체감온도 xml
     url = 'http://newsky2.kma.go.kr/iros/RetrieveLifeIndexService3/getUltrvLifeList'
-    queryParams = '?' + 'ServiceKey=8KngOJTE%2Fh%2BjNJwkeXlJsC5d1ShWfQ9YadkSpoLeubDe9cekkO44ShcRAra7hjTk%2BYAzJEui5eYPFVGegxUngw%3D%3D' + \
-                  '&areaNo=1100000000&time=2019051706'
 
-    request = urllib.request.Request(url + queryParams)
+    ServiceKey = 'ServiceKey=8KngOJTE%2Fh%2BjNJwkeXlJsC5d1ShWfQ9YadkSpoLeubDe9cekkO44ShcRAra7hjTk%2BYAzJEui5eYPFVGegxUngw%3D%3D'
+    areaNo = 1100000000
+    areaNo = 'areaNo=' + str(areaNo)
+    now = 'time='+ time.strftime('%Y%m%d%H', time.localtime())
+    params = '?' + ServiceKey + '&' + areaNo + '&' + now
+    request = urllib.request.Request(url + params)
 
     try:
         resp = urllib.request.urlopen(request)
@@ -136,7 +134,9 @@ def getUltrvLifeList():        # 체감온도 xml
         xml = resp.read()
         print("XML Document loading complete.")
         dom = parseString(xml)
-        return dom
+        # print(dom.toprettyxml())
+        tree = ElementTree.fromstring(str(dom.toxml()))
+        return tree
 
 
 def CityAirPollution():                 # 시,도별 대기오염지수 xml
@@ -161,18 +161,7 @@ def CityAirPollution():                 # 시,도별 대기오염지수 xml
         return dom
 
 
-# def parseXMLs():
-#     global TimefcstDocument, DaysWeatherDoc, DaysTemperatureDoc, UltRVDoc, APDoc
-#
-#     TimefcstDocument = getForecastSpaceData()             # 동네예보 xml DOM 객체에 저장
-#     DaysWeatherDoc = getMiddleLandWeather()           # 중기예보 xml DOM 객체에 저장
-#     DaysTemperatureDoc = getMiddleTemperature()       # 중기기온 xml DOM 객체에 저장
-#     UltRVDoc = getUltrvLifeList()                     # 자외선지수 xml DOM 객체에 저장
-#     APDoc = CityAirPollution()                        # 시,도별 PM10평균 xml DOM 객체에 저장
-
-parseFcstPerTime()
-
-class Parser():
+class Parser:
     def __init__(self):
         self.TimeFcstDocument = parseFcstPerTime()
         # self.DaysWeatherDoc = getMiddleLandWeather()

@@ -43,10 +43,26 @@ def getSpaceFcstData(tree):             # 동네예보정보에서 하늘상태,
     return fcstData
 
 
-def getUltraViolet(UVDoc):               # 자외선지수 뽑아내는 함수
+def getUltraViolet(uvTree):                                                  # 자외선지수 뽑아내는 함수
+    items = uvTree.find('Body/IndexModel')
+    uvData = []
+    if items.find('today').text is None:                                     # 오늘 자외선 지수 값이 없으면
+        uvDate = items.find('tomorrow').tag
+        uvDatum = items.find('tomorrow').text
+        uvData.append({uvDate : uvDatum})                                    # 내일 값을 리스트에 넣는다
+
+    else:
+        uvDate = items.find('today').tag
+        uvDatum = items.find('today').text
+        uvData.append({uvDate: uvDatum})
+
+    # print({uvDate : uvDatum})
+    return uvData
     pass
 
 
-tree, now = Parser().TimeFcstDocument
-print(getSpaceFcstData(tree))
+tree = Parser().TimeFcstDocument
+uv = Parser().UVDoc
+lst = getSpaceFcstData(tree) + getUltraViolet(uv)
 
+print(lst)
