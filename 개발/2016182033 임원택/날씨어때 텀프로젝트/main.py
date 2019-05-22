@@ -1,10 +1,12 @@
 from tkinter import*
+
+from common import scrollLayout
+
 from client import overview
 from client import timeToWeather
 from client import dayToWeather
 from client import airFresh
 
-from common import scrollLayout
 
 class FragmentManager():
     pass
