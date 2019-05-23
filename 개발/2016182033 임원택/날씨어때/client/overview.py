@@ -11,6 +11,8 @@ class Overview:
         ptyCode =0
         weatherCode = 0
 
+        print(dicData)
+
         # Check PTY
         for i in range (dicData.__len__()):
             if dicData[i].get('PTY'):
@@ -59,6 +61,9 @@ class Overview:
 
         # self.mParamDataList = overviewS.OverviewS()
         # self.getWeather()
+        # test
+        self.mParamWeather = PhotoImage(file = "sunny.gif",width = 100, height = 100)
+
 
         # Font, BackgroundColor
         self.mFontDate = font.Font(family = "08SeoulHangangL_0",size = 10)
@@ -67,16 +72,13 @@ class Overview:
         self.mFontText = font.Font(family = "08SeoulHangangL_0",size = 12)
         self.mBackgroundColor = '#%02x%02x%02x' % (224, 255, 255)
 
-        # test
-        self.mParamWeather = PhotoImage(file = "sunny.gif",width = 100, height = 100)
-
         # Date
         self.mTxtDate = Label(frame, text = self.mParamDate,font=self.mFontDate,bg = self.mBackgroundColor,fg="blue")
-        self.mTxtDate.grid(row = 0, column = 1)
+        self.mTxtDate.pack(anchor = CENTER)
 
         # Weather & Temperature
         self.mMidFrame = Frame(frame,bg = self.mBackgroundColor)
-        self.mMidFrame.grid(row=1,column = 1)
+        self.mMidFrame.pack(anchor = CENTER)
         # Weather Image
         self.mImgWeather = Label(self.mMidFrame,image = self.mParamWeather,bg = self.mBackgroundColor)
         self.mImgWeather.grid(row=0,column = 0)
@@ -85,8 +87,8 @@ class Overview:
         self.mTxtTemperature.grid(row=0, column =1)
 
         # SubTemperature, UV Rays
-        self.mBotFrame = Frame(frame)
-        self.mBotFrame.grid(row = 2, column=1)
+        self.mBotFrame = Frame(frame,bg = self.mBackgroundColor)
+        self.mBotFrame.pack(pady = 5,anchor = CENTER)
         self.mTxtHighRowTemp = Label(self.mBotFrame, text=self.mParamHighRowTemp, font=self.mFontSubTemp,bg = self.mBackgroundColor,fg="blue")
         self.mTxtHighRowTemp.grid(row=0, column=0)
         self.mTxtUVRays = Label(self.mBotFrame,text = self.mParamUVRays, font=self.mFontSubTemp,bg = self.mBackgroundColor,fg="blue")
@@ -94,8 +96,7 @@ class Overview:
 
         # Text
         self.mTxtDesc = Label(frame,text =  self.mParamDesc, font=self.mFontText,bg = self.mBackgroundColor,fg="blue")
-        self.mTxtDesc.grid(row = 3, column = 1)
-
+        self.mTxtDesc.pack(anchor = CENTER)
 
     def update(self):
         # Service에서 받아오기

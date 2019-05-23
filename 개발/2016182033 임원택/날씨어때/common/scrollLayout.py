@@ -14,7 +14,7 @@ class ScrollLayout():
     # SubFrame 추가
     def addFrame(self, frame):
         # window 위에 하나가 덮여쓰임
-        self.canvas.create_window((200,10),window = frame, anchor = N)
+        self.canvas.create_window((200,10),width = 300,height = 300,window = frame, anchor = N)
 
     # 가로 스크롤 지정
     def horizonMode(self):
