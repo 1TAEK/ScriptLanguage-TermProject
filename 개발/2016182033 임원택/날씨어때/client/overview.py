@@ -6,12 +6,10 @@ from server import overviewS
 from common import time
 
 class Overview:
-    def getWeather(self):
+    def setWeather(self):
         dicData = self.mParamDataList.getSpaceFcstData()
         ptyCode =0
         weatherCode = 0
-
-        print(dicData)
 
         # Check PTY
         for i in range (dicData.__len__()):
@@ -26,7 +24,7 @@ class Overview:
                     isCheckPTY = False
         else:
             weatherCode = ptyCode
-            isCheckPTY = TRUE
+            isCheckPTY = True
 
         if isCheckPTY == False:
             # 1:맑음 3:구름많음 4:흐림
@@ -47,23 +45,44 @@ class Overview:
             elif weatherCode =='4':
                 self.mParamWeather = PhotoImage(file = "shower.gif")
 
-    def getTemparture(self):
-        pass
+    def setTemparture(self):
+        dicData = self.mParamDataList.getSpaceFcstData()
+        for i in range (dicData.__len__()):
+            if dicData[i].get('T3H'):
+                self.mParamTemperature = str(dicData[i].get('T3H'))+'도'
+
+    def setHighRowTemp(self):
+        dicData = self.mParamDataList.getSpaceFcstData()
+        highTemp = 0
+        rowTemp = 0
+        for i in range (dicData.__len__()):
+            if dicData[i].get('TMN'):
+                highTemp = str(int(dicData[i].get('TMN')))
+            if dicData[i].get('TMX'):
+                rowTemp = str(int(dicData[i].get('TMX')))
+        self.mParamHighRowTemp = highTemp+"/"+rowTemp
+
+    def setUVRays(self):
+        dicData = self.mParamDataList.getUltraViolet()
+        self.mParamUVRays = "자외선 " + dicData[0] + '도'
 
     def __init__(self,frame):
         # Param
         self.mParamDate = time.Time().mTimeTotal
         self.mParamWeather = ""
-        self.mParamTemperature = "21도"
-        self.mParamHighRowTemp = "22/7"
-        self.mParamUVRays = "자외선 21도"
+        self.mParamTemperature = ""
+        self.mParamHighRowTemp = ""
+        self.mParamUVRays = ""
         self.mParamDesc = "따뜻함이 물씬 느껴지는 하루\n강한 자외선을 주의하세요"
 
-        # self.mParamDataList = overviewS.OverviewS()
-        # self.getWeather()
+        # 데이터 불러오기
+        self.mParamDataList = overviewS.OverviewS()
+        self.setWeather()
+        self.setTemparture()
+        self.setHighRowTemp()
+        self.setUVRays()
         # test
-        self.mParamWeather = PhotoImage(file = "sunny.gif",width = 100, height = 100)
-
+        # self.mParamWeather = PhotoImage(file = "sunny.gif",width = 100, height = 100)
 
         # Font, BackgroundColor
         self.mFontDate = font.Font(family = "08SeoulHangangL_0",size = 10)

@@ -165,11 +165,11 @@ def CityAirPollution():                 # 시,도별 대기오염지수 xml
 
 class Parser:
     def __init__(self):
-        # self.TimeFcstDocument = parseFcstPerTime()
+        self.TimeFcstDocument = parseFcstPerTime()
         self.DaysWeatherDoc = getMiddleLandWeather()
         self.DaysTemperatureDoc = getMiddleTemperature()
-        # self.UVDoc = getUltrvLifeList()
-        # self.APDoc = CityAirPollution()
+        self.UVDoc = getUltrvLifeList()
+        self.APDoc = CityAirPollution()
 
     def update(self):
         self.TimeFcstDocument = parseFcstPerTime()

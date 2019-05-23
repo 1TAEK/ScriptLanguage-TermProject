@@ -1,8 +1,8 @@
 from tkinter import*
 
 from common import time
-
 from server import forecastPerTime
+
 
 class TimeToWeather:
     def drawHistogram(self):
@@ -36,7 +36,6 @@ class TimeToWeather:
     def inputWeather(self):
         # 시간에 따른 날씨이미지 넣어주기
         dicData = self.mParamDataList.getFcstPerTime()
-        print(dicData)
 
         # 시간에 따라 8(시간)*4개씩
         # PTY,SKY 값 추출
@@ -48,23 +47,44 @@ class TimeToWeather:
             if dicData[i].get('SKY'):
                 skyCode.append(dicData[i].get('SKY'))
 
-        # print (ptyCode)
-        # print (skyCode)
         # PTY에 따른 날씨값 저장
+        isCheckPTY = []
         for i in range(8):
             if ptyCode[i] == '0':
                 self.mParamWeather.append(skyCode[i])
+                isCheckPTY.append(False)
             else:
                 self.mParamWeather.append(ptyCode[i])
-        print(self.mParamWeather)
+                isCheckPTY.append(True)
 
         for i in range(8):
-            if self.mParamWeather[i] == '1':
-                self.mImgWeather.append()
-            elif self.mParamWeather[i] == '3':
-                self.mImgWeather.append()
-            elif self.mParamWeather[i] == '4':
-                self.mImgWeather.append()
+            # True :PTY ON(PTY) / False: PTY OFF(SKY)
+            # SKY : 맑음(1), 구름많음(3), 흐림(4)
+            # PTY : 없음(0), 비(1), 비/눈(2), 눈(3), 소나기(4)
+            if isCheckPTY[i]:
+                if self.mParamWeather[i] == '1':
+                    # self.mImgWeather.append(PhotoImage(file = "sunny.gif",width = 20, height = 20))
+                    self.mImgWeather.append("맑음")
+                elif self.mParamWeather[i] == '비':
+                    # self.mImgWeather.append(PhotoImage(file = "sunny.gif",width = 20, height = 20))
+                    self.mImgWeather.append("비/눈")
+                elif self.mParamWeather[i] == '3':
+                    # self.mImgWeather.append(PhotoImage(file = "sunny.gif",width = 20, height = 20))
+                    self.mImgWeather.append("눈")
+                elif self.mParamWeather[i] == '4':
+                    # self.mImgWeather.append(PhotoImage(file = "sunny.gif",width = 20, height = 20))
+                    self.mImgWeather.append("소나기")
+            else:
+                if self.mParamWeather[i] == '1':
+                    # self.mImgWeather.append(PhotoImage(file = "sunny.gif",width = 20, height = 20))
+                    self.mImgWeather.append("맑음")
+                elif self.mParamWeather[i] == '3':
+                    # self.mImgWeather.append(PhotoImage(file = "sunny.gif",width = 20, height = 20))
+                    self.mImgWeather.append("구름많음")
+                elif self.mParamWeather[i] == '4':
+                    # self.mImgWeather.append(PhotoImage(file = "sunny.gif",width = 20, height = 20))
+                    self.mImgWeather.append("흐림")
+
 
     def __init__(self):
         # Init 초기값 받아오기
@@ -98,13 +118,15 @@ class TimeToWeather:
             self.mTxtTime[i].grid(row =0, column = i, padx = 12,pady=20)
         # 날씨
         self.mImgWeather = []
+        self.mLabelWeather = []
         self.inputWeather()
+
         for i in range(8):
-            self.mImgWeather.append(Label(self.mWindow, image=self.mParamWeather[i],bg= self.mBackgroundColor))
-            mImgWeather[i].grid(row =0, column = i, padx = 10,pady=20)
+            self.mLabelWeather.append(Label(self.mWindow,text=self.mImgWeather[i],bg= self.mBackgroundColor))
+            self.mLabelWeather[i].grid(row =1, column = i, padx = 10,pady=20)
         # 강수량
-        mTxtRainAmount = Label(self.mWindow, text=self.mParamRainAmount)
-        mTxtRainAmount.pack(side=LEFT)
+        # mTxtRainAmount = Label(self.mWindow, text=self.mParamRainAmount)
+        # mTxtRainAmount.pack(side=LEFT)
 
         # 기온 막대그래프
         mHistogramTemperature = self.drawHistogram()
