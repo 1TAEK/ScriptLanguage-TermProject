@@ -61,7 +61,7 @@ def parseFcstPerTime():  # 동네예보조회 xml 파싱
         print(parseString(e.read().decode('utf-8')).toprettyxml())
     else:
         xml = resp.read()
-        print("XML Document loading complete.")
+        print("동네예보 XML Document loading complete.")
         dom = parseString(xml)
         # print(dom.toprettyxml())
         tree = ElementTree.fromstring( str(dom.toxml()))
@@ -70,7 +70,7 @@ def parseFcstPerTime():  # 동네예보조회 xml 파싱
 def getMiddleLandWeather():     # 중기육상예보 xml (3일~10일 후 예보 정보 구름많음 등..)
     url = 'http://newsky2.kma.go.kr/service/MiddleFrcstInfoService/getMiddleLandWeather'
     queryParams = '?' + 'ServiceKey=8KngOJTE%2Fh%2BjNJwkeXlJsC5d1ShWfQ9YadkSpoLeubDe9cekkO44ShcRAra7hjTk%2BYAzJEui5eYPFVGegxUngw%3D%3D' +\
-        '&regId=11B00000&tmFc=201905170600&numOfRows=10&pageNo=1'
+        '&regId=11B00000&tmFc=201905230600&numOfRows=10&pageNo=1'
 
     request = urllib.request.Request(url + queryParams)
 
@@ -84,8 +84,9 @@ def getMiddleLandWeather():     # 중기육상예보 xml (3일~10일 후 예보 
         print(parseString(e.read().decode('utf-8')).toprettyxml())
     else:
         xml = resp.read()
-        print("XML Document loading complete.")
+        print("중기예보 XML Document loading complete.")
         dom = parseString(xml)
+        print(dom.toprettyxml())
         tree = ElementTree.fromstring(str(dom.toxml()))
         return tree
 
@@ -93,7 +94,7 @@ def getMiddleLandWeather():     # 중기육상예보 xml (3일~10일 후 예보 
 def getMiddleTemperature():         # 중기기온조회 xml
     url = 'http://newsky2.kma.go.kr/service/MiddleFrcstInfoService/getMiddleTemperature'
     queryParams = '?' + 'ServiceKey=8KngOJTE%2Fh%2BjNJwkeXlJsC5d1ShWfQ9YadkSpoLeubDe9cekkO44ShcRAra7hjTk%2BYAzJEui5eYPFVGegxUngw%3D%3D' + \
-                  '&regId=11B10101&tmFc=201905170600'
+                  '&regId=11B10101&tmFc=201905230600'
 
     request = urllib.request.Request(url + queryParams)
 
@@ -107,8 +108,9 @@ def getMiddleTemperature():         # 중기기온조회 xml
         print(parseString(e.read().decode('utf-8')).toprettyxml())
     else:
         xml = resp.read()
-        print("XML Document loading complete.")
+        print("중기온도 XML Document loading complete.")
         dom = parseString(xml)
+        print(dom.toprettyxml())
         tree = ElementTree.fromstring(str(dom.toxml()))
         return tree
 
@@ -132,7 +134,7 @@ def getUltrvLifeList():        # 체감온도 xml
         print(parseString(e.read().decode('utf-8')).toprettyxml())
     else:
         xml = resp.read()
-        print("XML Document loading complete.")
+        print("자외선 XML Document loading complete.")
         dom = parseString(xml)
         # print(dom.toprettyxml())
         tree = ElementTree.fromstring(str(dom.toxml()))
@@ -156,18 +158,18 @@ def CityAirPollution():                 # 시,도별 대기오염지수 xml
         print(parseString(e.read().decode('utf-8')).toprettyxml())
     else:
         xml = resp.read()
-        print("XML Document loading complete.")
+        print("미세먼지농도 XML Document loading complete.")
         dom = parseString(xml)
         return dom
 
 
 class Parser:
     def __init__(self):
-        self.TimeFcstDocument = parseFcstPerTime()
+        # self.TimeFcstDocument = parseFcstPerTime()
         self.DaysWeatherDoc = getMiddleLandWeather()
         self.DaysTemperatureDoc = getMiddleTemperature()
-        self.UVDoc = getUltrvLifeList()
-        self.APDoc = CityAirPollution()
+        # self.UVDoc = getUltrvLifeList()
+        # self.APDoc = CityAirPollution()
 
     def update(self):
         self.TimeFcstDocument = parseFcstPerTime()
