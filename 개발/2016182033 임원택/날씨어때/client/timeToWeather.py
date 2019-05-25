@@ -6,11 +6,22 @@ from server import forecastPerTime
 
 class TimeToWeather:
     def drawHistogram(self):
-        pass
-
-    def inputData(self):
-        # 시간별로 그 값들 저장
-        self.mDataList
+        self.mCanvas.delete("picture")
+        histogram = []
+        # 날씨값 받아오기
+        dicData = self.mParamDataList.getFcstPerTime()
+        for i in range (32):
+            if dicData[i].get('T3H'):
+                histogram.append(int(dicData[i].get('T3H')))
+        # 빈도수 최대값을 구함
+        maxTemp = int(max(histogram))
+        # 그려주기 사이간격은 12
+        barW = (self.mWindowWidth-24)/8
+        barH = 350
+        for i in range(8):
+            self.mCanvas.create_rectangle(i*barW+40,barH-(barH -50)*histogram[i]/maxTemp,
+                                          i*barW+60,barH,tag="picture")
+            self.mCanvas.create_text(i*barW+40+10,barH-(barH -50)*histogram[i]/maxTemp -15,text=str(histogram[i]))
 
     def inputTime(self):
         # 현재시간 받아오기
@@ -64,8 +75,8 @@ class TimeToWeather:
             if isCheckPTY[i]:
                 if self.mParamWeather[i] == '1':
                     # self.mImgWeather.append(PhotoImage(file = "sunny.gif",width = 20, height = 20))
-                    self.mImgWeather.append("맑음")
-                elif self.mParamWeather[i] == '비':
+                    self.mImgWeather.append("비")
+                elif self.mParamWeather[i] == '2':
                     # self.mImgWeather.append(PhotoImage(file = "sunny.gif",width = 20, height = 20))
                     self.mImgWeather.append("비/눈")
                 elif self.mParamWeather[i] == '3':
@@ -78,6 +89,9 @@ class TimeToWeather:
                 if self.mParamWeather[i] == '1':
                     # self.mImgWeather.append(PhotoImage(file = "sunny.gif",width = 20, height = 20))
                     self.mImgWeather.append("맑음")
+                elif self.mParamWeather[i] == '2':
+                    # self.mImgWeather.append(PhotoImage(file = "sunny.gif",width = 20, height = 20))
+                    self.mImgWeather.append("구름조금")
                 elif self.mParamWeather[i] == '3':
                     # self.mImgWeather.append(PhotoImage(file = "sunny.gif",width = 20, height = 20))
                     self.mImgWeather.append("구름많음")
@@ -85,11 +99,9 @@ class TimeToWeather:
                     # self.mImgWeather.append(PhotoImage(file = "sunny.gif",width = 20, height = 20))
                     self.mImgWeather.append("흐림")
 
-
     def __init__(self):
         # Init 초기값 받아오기
         self.mParamDataList = forecastPerTime.ForecastPerTime()
-
         self.mParamTime = []
         self.mParamIntTime = []
         self.mParamWeather = []
@@ -107,14 +119,18 @@ class TimeToWeather:
         # Window
         self.mWindow = Tk()
         self.mWindow.title("날씨어떄")
-        self.mWindow.geometry("730x600")
+        self.mWindow.geometry("730x500")
         self.mWindow.resizable(False, False)
         self.mWindow.configure(bg=self.mBackgroundColor)
+        self.mWindowWidth = 730
+        self.mWindowHeight = 500
 
         # 시간
+        self.mFrame = Frame(self.mWindow, bg=self.mBackgroundColor)
+        self.mFrame.pack()
         self.mTxtTime = []
         for i in range(8):
-            self.mTxtTime.append(Label(self.mWindow, text = self.mParamTime[i],bg= self.mBackgroundColor, font=self.mFontDate))
+            self.mTxtTime.append(Label(self.mFrame, text = self.mParamTime[i],bg= self.mBackgroundColor, font=self.mFontDate))
             self.mTxtTime[i].grid(row =0, column = i, padx = 12,pady=20)
         # 날씨
         self.mImgWeather = []
@@ -122,14 +138,16 @@ class TimeToWeather:
         self.inputWeather()
 
         for i in range(8):
-            self.mLabelWeather.append(Label(self.mWindow,text=self.mImgWeather[i],bg= self.mBackgroundColor))
+            self.mLabelWeather.append(Label(self.mFrame,text=self.mImgWeather[i],bg= self.mBackgroundColor))
             self.mLabelWeather[i].grid(row =1, column = i, padx = 10,pady=20)
         # 강수량
         # mTxtRainAmount = Label(self.mWindow, text=self.mParamRainAmount)
         # mTxtRainAmount.pack(side=LEFT)
 
         # 기온 막대그래프
-        mHistogramTemperature = self.drawHistogram()
+        self.mCanvas = Canvas(self.mWindow,bg = self.mBackgroundColor)
+        self.mCanvas.pack(fill=BOTH,expand=True)
+        self.drawHistogram()
 
     def update(self):
         pass

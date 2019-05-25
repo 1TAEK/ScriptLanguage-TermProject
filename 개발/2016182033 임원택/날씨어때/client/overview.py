@@ -57,14 +57,42 @@ class Overview:
         rowTemp = 0
         for i in range (dicData.__len__()):
             if dicData[i].get('TMN'):
-                highTemp = str(int(dicData[i].get('TMN')))
+                highTemp = str(dicData[i].get('TMN'))
             if dicData[i].get('TMX'):
-                rowTemp = str(int(dicData[i].get('TMX')))
+                rowTemp = str(dicData[i].get('TMX'))
         self.mParamHighRowTemp = highTemp+"/"+rowTemp
 
     def setUVRays(self):
         dicData = self.mParamDataList.getUltraViolet()
-        self.mParamUVRays = "자외선 " + dicData[0] + '도'
+        self.mParamUVRays = "자외선지수:" + dicData[0]
+
+    def setDesc(self):
+        temp = int(self.mParamTemperature.strip('도'))
+        uv = int(self.mParamUVRays.strip('자외선지수:'))
+
+        # 날씨상태체크
+        if temp < 4:
+            self.mParamDesc = "매우 추운 오늘 롱패딩이 필수입니다\n"
+        elif temp >=4 and temp <16:
+            self.mParamDesc = "쌀쌀한 기온, 트랜치코트가 필요해요!\n"
+        elif temp >=16 and temp <21:
+            self.mParamDesc = "데이트하기 딱 좋은 따뜻한 날씨 연애합시다\n"
+        elif temp >=21and temp <27:
+            self.mParamDesc = "더운 날씨엔 반팔 반바지 착용해요\n"
+        elif temp >=27:
+            self.mParamDesc = "매우 더운 날씨, 불쾌지수 증가!\n"
+
+        # 자외선체크
+        if uv < 3:
+            self.mParamDesc += "썬크림 따위는 필요없습니다."
+        elif uv >= 3 and uv < 5:
+            self.mParamDesc += "낮은 자외선으로 문제없습니다."
+        elif uv >=5 and uv < 9:
+            self.mParamDesc += "약간의 자외선을 조심하세요!"
+        elif uv >=9 and uv < 12:
+            self.mParamDesc += "썬글라스는 사치이고 썬크림만 발라주세요!"
+        elif uv >=12:
+            self.mParamDesc += "썬글라스, 썬크림이 필수입니다!"
 
     def __init__(self,frame):
         # Param
@@ -81,6 +109,8 @@ class Overview:
         self.setTemparture()
         self.setHighRowTemp()
         self.setUVRays()
+        self.setDesc()
+
         # test
         # self.mParamWeather = PhotoImage(file = "sunny.gif",width = 100, height = 100)
 
