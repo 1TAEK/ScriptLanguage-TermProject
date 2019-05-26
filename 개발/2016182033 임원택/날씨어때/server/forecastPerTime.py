@@ -1,10 +1,10 @@
-from server import parseXMLs
+from server.parseXMLs import parsed
 import time
 
 
 class ForecastPerTime:
     def __init__(self):
-        self.tree = parseXMLs.Parser().TimeFcstDocument
+        self.tree = parsed.TimeFcstDocument
 
     def getCloseTime(self):  # 현재시간에서 가장 근접한 예보 시간을 반환하는 함수.
         now = time.strftime('%H', time.localtime()) + '00'

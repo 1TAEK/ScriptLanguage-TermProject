@@ -94,7 +94,7 @@ def getMiddleLandWeather():     # 중기육상예보 xml (3일~10일 후 예보 
         xml = resp.read()
         print("중기예보 XML Document loading complete.")
         dom = parseString(xml)
-        print(dom.toprettyxml())
+        # print(dom.toprettyxml())
         tree = ElementTree.fromstring(str(dom.toxml()))
         return tree
 
@@ -123,7 +123,7 @@ def getMiddleTemperature():         # 중기기온조회 xml
         xml = resp.read()
         print("중기온도 XML Document loading complete.")
         dom = parseString(xml)
-        print(dom.toprettyxml())
+        # print(dom.toprettyxml())
         tree = ElementTree.fromstring(str(dom.toxml()))
         return tree
 
@@ -157,7 +157,7 @@ def getUltrvLifeList():        # 체감온도 xml
 def CityAirPollution():                 # 시,도별 대기오염지수 xml
     url = 'http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getCtprvnMesureLIst'
     queryParams = '?' + 'ServiceKey=8KngOJTE%2Fh%2BjNJwkeXlJsC5d1ShWfQ9YadkSpoLeubDe9cekkO44ShcRAra7hjTk%2BYAzJEui5eYPFVGegxUngw%3D%3D' + \
-                  '&numOfRow=10&pageNo=1&itemCode=PM10&dataGubun=DAILY&searchCondition=WEEK'
+                  '&numOfRow=1&pageNo=1&itemCode=PM10&dataGubun=HOUR&searchCondition=MONTH'
 
     request = urllib.request.Request(url + queryParams)
 
@@ -174,7 +174,7 @@ def CityAirPollution():                 # 시,도별 대기오염지수 xml
         print("미세먼지농도 XML Document loading complete.")
         dom = parseString(xml)
         tree = ElementTree.fromstring(str(dom.toxml()))
-        # print(dom.toxml())
+        print(dom.toxml())
         return tree
 
 
