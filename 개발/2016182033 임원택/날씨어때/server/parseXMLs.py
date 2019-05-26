@@ -72,7 +72,15 @@ def getMiddleLandWeather():     # 중기육상예보 xml (3일~10일 후 예보 
     queryParams = '?' + 'ServiceKey=8KngOJTE%2Fh%2BjNJwkeXlJsC5d1ShWfQ9YadkSpoLeubDe9cekkO44ShcRAra7hjTk%2BYAzJEui5eYPFVGegxUngw%3D%3D' +\
         '&regId=11B00000&tmFc=201905230600&numOfRows=10&pageNo=1'
 
-    request = urllib.request.Request(url + queryParams)
+    ServiceKey = 'ServiceKey=8KngOJTE%2Fh%2BjNJwkeXlJsC5d1ShWfQ9YadkSpoLeubDe9cekkO44ShcRAra7hjTk%2BYAzJEui5eYPFVGegxUngw%3D%3D'
+    regId = 'regId=' + '11B00000'
+    tmFc = 'tmFc=' + '201905260600' #time.strftime('%Y%m%d0600', time.localtime())
+    numOfRows='numOfRows=10'
+    pageNo = 'pageNo=1'
+
+    param = '?' + ServiceKey + '&' + regId + '&' + tmFc + '&' + numOfRows + '&' + pageNo
+
+    request = urllib.request.Request(url + param)
 
     try:
         resp = urllib.request.urlopen(request)
@@ -96,8 +104,13 @@ def getMiddleTemperature():         # 중기기온조회 xml
     queryParams = '?' + 'ServiceKey=8KngOJTE%2Fh%2BjNJwkeXlJsC5d1ShWfQ9YadkSpoLeubDe9cekkO44ShcRAra7hjTk%2BYAzJEui5eYPFVGegxUngw%3D%3D' + \
                   '&regId=11B10101&tmFc=201905230600'
 
-    request = urllib.request.Request(url + queryParams)
+    ServiceKey = 'ServiceKey=8KngOJTE%2Fh%2BjNJwkeXlJsC5d1ShWfQ9YadkSpoLeubDe9cekkO44ShcRAra7hjTk%2BYAzJEui5eYPFVGegxUngw%3D%3D'
+    regId = 'regId=' + '11B10101'
+    tmFc = 'tmFc='+ '201905260600'#time.strftime('%Y%m%d0600', time.localtime())
 
+    param = '?' + ServiceKey + '&' + regId + '&' + tmFc
+
+    request = urllib.request.Request(url + param)
     try:
         resp = urllib.request.urlopen(request)
     except urllib.error.URLError as e:
@@ -160,7 +173,9 @@ def CityAirPollution():                 # 시,도별 대기오염지수 xml
         xml = resp.read()
         print("미세먼지농도 XML Document loading complete.")
         dom = parseString(xml)
-        return dom
+        tree = ElementTree.fromstring(str(dom.toxml()))
+        # print(dom.toxml())
+        return tree
 
 
 class Parser:
