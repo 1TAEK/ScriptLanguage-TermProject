@@ -99,6 +99,12 @@ class TimeToWeather:
                     # self.mImgWeather.append(PhotoImage(file = "sunny.gif",width = 20, height = 20))
                     self.mImgWeather.append("흐림")
 
+    def inputRainAmount(self):
+        dicData = self.mParamDataList.getFcstPerTime()
+        for i in range (32):
+           if dicData[i].get('POP'):
+               self.mParamRainAmount.append('강수'+dicData[i].get('POP')+'%')
+
     def __init__(self):
         # Init 초기값 받아오기
         self.mParamDataList = forecastPerTime.ForecastPerTime()
@@ -106,7 +112,7 @@ class TimeToWeather:
         self.mParamIntTime = []
         self.mParamWeather = []
         self.mParamRainAmount = []
-        self.mParamTemperature = []
+        # self.mParamTemperature = []
 
         # 배열에넣기------------------------------------------
         # 현재시간으로부터 3시간 주기로 배열에 넣어주기
@@ -119,11 +125,11 @@ class TimeToWeather:
         # Window
         self.mWindow = Tk()
         self.mWindow.title("날씨어떄")
-        self.mWindow.geometry("730x500")
+        self.mWindow.geometry("730x530")
         self.mWindow.resizable(False, False)
         self.mWindow.configure(bg=self.mBackgroundColor)
         self.mWindowWidth = 730
-        self.mWindowHeight = 500
+        self.mWindowHeight = 530
 
         # 시간
         self.mFrame = Frame(self.mWindow, bg=self.mBackgroundColor)
@@ -139,10 +145,13 @@ class TimeToWeather:
 
         for i in range(8):
             self.mLabelWeather.append(Label(self.mFrame,text=self.mImgWeather[i],bg= self.mBackgroundColor))
-            self.mLabelWeather[i].grid(row =1, column = i, padx = 10,pady=20)
+            self.mLabelWeather[i].grid(row =1, column = i, padx = 10,pady=15)
         # 강수량
-        # mTxtRainAmount = Label(self.mWindow, text=self.mParamRainAmount)
-        # mTxtRainAmount.pack(side=LEFT)
+        self.mTxtRainAmount = []
+        self.inputRainAmount()
+        for i in range(8):
+            self.mTxtRainAmount.append(Label(self.mFrame, text=self.mParamRainAmount[i],bg=self.mBackgroundColor))
+            self.mTxtRainAmount[i].grid(row =2, column = i, padx = 10,pady=5)
 
         # 기온 막대그래프
         self.mCanvas = Canvas(self.mWindow,bg = self.mBackgroundColor)
