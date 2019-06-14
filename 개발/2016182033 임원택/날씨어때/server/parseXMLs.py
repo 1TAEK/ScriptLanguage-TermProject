@@ -3,6 +3,7 @@ import urllib.parse
 from xml.dom.minidom import parseString
 from xml.etree import ElementTree
 import time
+from server.localCodes import localDict
 # 동네예보 xml은 base_date를 넘겨줘야함.
 # 2019.05.17 : 필요한 Open API 파싱 완료.
 #              하지만 옵션들 고정적인게 아니라 현재 또는 원하는 date, time 지정해줄 수 있어야 하기 때문에 수정이 필요함.
@@ -157,7 +158,7 @@ def getUltrvLifeList():        # 체감온도 xml
 def CityAirPollution():                 # 시,도별 대기오염지수 xml
     url = 'http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getCtprvnMesureLIst'
     queryParams = '?' + 'ServiceKey=8KngOJTE%2Fh%2BjNJwkeXlJsC5d1ShWfQ9YadkSpoLeubDe9cekkO44ShcRAra7hjTk%2BYAzJEui5eYPFVGegxUngw%3D%3D' + \
-                  '&numOfRow=1&pageNo=1&itemCode=PM10&dataGubun=HOUR&searchCondition=MONTH'
+                  '&numOfRow=1&pageNo=1&itemCode=PM10&dataGubun=HOUR&searchCondition=WEEK'
 
     request = urllib.request.Request(url + queryParams)
 
@@ -174,12 +175,11 @@ def CityAirPollution():                 # 시,도별 대기오염지수 xml
         print("미세먼지농도 XML Document loading complete.")
         dom = parseString(xml)
         tree = ElementTree.fromstring(str(dom.toxml()))
-        print(dom.toxml())
         return tree
 
 
 class Parser:
-    def __init__(self):
+    def __init__(self, ):
         self.TimeFcstDocument = parseFcstPerTime()
         self.DaysWeatherDoc = getMiddleLandWeather()
         self.DaysTemperatureDoc = getMiddleTemperature()

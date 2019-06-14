@@ -15,9 +15,9 @@ class ForecastPerDay:
             else:   # 8일~10일후 예보는 오전/오후로 안나눠져있음. 같은 값으로 채움.
                 wfAm = item.find('wf' + str(i)).text
                 wfPm = item.find('wf' + str(i)).text
-            fcstData.append(wfAm)
+            fcstData.append((wfAm, wfPm))
 
-        # print(fcstData)
+        print(fcstData)
         return fcstData
 
     def getTemp(self):
@@ -28,6 +28,10 @@ class ForecastPerDay:
             minTemp = item.find('taMin' + str(i)).text
             fcstData.append((maxTemp, minTemp))
 
-        # print(fcstData)
+        print(fcstData)
         return fcstData
         pass
+
+FcstPerDays = ForecastPerDay()
+FcstPerDays.getTemp()
+FcstPerDays.getFcst()

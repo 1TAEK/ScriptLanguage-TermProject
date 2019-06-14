@@ -54,14 +54,14 @@ class OverviewS:
         if items.find('today').text is None:                                     # 오늘 자외선 지수 값이 없으면
             uvDate = items.find('tomorrow').tag
             uvDatum = items.find('tomorrow').text
-            uvData.append(uvDatum)                                    # 내일 값을 리스트에 넣는다
+            uvData.append({uvDate : uvDatum})                                    # 내일 값을 리스트에 넣는다
 
         else:
             uvDate = items.find('today').tag
             uvDatum = items.find('today').text
-            uvData.append(uvDatum)
+            uvData.append({uvDate: uvDatum})
 
-        # print({uvDate : uvDatum})
+        print({uvDate : uvDatum})
         return uvData
 
 
