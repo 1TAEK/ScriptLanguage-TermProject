@@ -31,17 +31,17 @@ class Overview:
             if weatherCode == '1':
                 self.mParamWeather = PhotoImage(file = "sunny.png",width = 100, height = 100)
             elif weatherCode == '3' or weatherCode == '2':
-                self.mParamWeather = PhotoImage(file="cloudy.png",width = 100, height = 100)
+                self.mParamWeather = PhotoImage(file="smallcloud.png",width = 100, height = 100)
             elif weatherCode == '4':
                 self.mParamWeather = PhotoImage(file = "cloudy.png")
         else:
             # 1:비 2:비/눈 3:눈 4:소나기
             if weatherCode == '1':
-                self.mParamWeather = PhotoImage(file = "rain.png")
+                self.mParamWeather = PhotoImage(file = "rainy.png")
             elif weatherCode =='2':
                 self.mParamWeather = PhotoImage(file = "rain&snow.png")
             elif weatherCode == '3':
-                self.mParamWeather = PhotoImage (file = "snow.png")
+                self.mParamWeather = PhotoImage (file = "snowy.png")
             elif weatherCode =='4':
                 self.mParamWeather = PhotoImage(file = "shower.png")
 
@@ -150,11 +150,18 @@ class Overview:
     def update(self):
         # Service에서 받아오기
         self.mParamDate = time.Time().getDay()
-        self.mParamWeather = PhotoImage(file = "sunny.gif",width = 100, height = 100)
+        self.mParamWeather = PhotoImage(file = "sunny.png",width = 100, height = 100)
         self.mParamTemperature = "갱신됨"
         self.mParamHighRowTemp = "갱신됨"
         self.mParamUVRays = "갱신됨"
         self.mParamDesc = "갱신됨"
+
+        self.mParamDataList = overviewS.OverviewS()
+        self.setWeather()
+        self.setTemparture()
+        self.setHighRowTemp()
+        self.setUVRays()
+        self.setDesc()
 
         # Label 적용
         self.mTxtDate.configure(text = self.mParamDate)

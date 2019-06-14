@@ -3,7 +3,7 @@ import urllib.parse
 from xml.dom.minidom import parseString
 from xml.etree import ElementTree
 import time
-# from server.localCodes import localDict
+from server.localCodes import localDict
 # 동네예보 xml은 base_date를 넘겨줘야함.
 # 2019.05.17 : 필요한 Open API 파싱 완료.
 #              하지만 옵션들 고정적인게 아니라 현재 또는 원하는 date, time 지정해줄 수 있어야 하기 때문에 수정이 필요함.
@@ -39,15 +39,15 @@ def get_baseDateAndTime():          # 동네예보 base_date, base_time 반환�
     return base_date, base_time
 
 
-def parseFcstPerTime():  # 동네예보조회 xml 파싱
+def parseFcstPerTime(posX, posY):  # 동네예보조회 xml 파싱
     url = 'http://newsky2.kma.go.kr/service/SecndSrtpdFrcstInfoService2/ForecastSpaceData'
     serviceKey = 'ServiceKey=8KngOJTE%2Fh%2BjNJwkeXlJsC5d1ShWfQ9YadkSpoLeubDe9cekkO44ShcRAra7hjTk%2BYAzJEui5eYPFVGegxUngw%3D%3D'
 
     baseDate ,baseTime = get_baseDateAndTime()
     baseDate = 'base_date=' + baseDate
     baseTime = 'base_time=' + baseTime
-    nx = 'nx=60'
-    ny = 'ny=127'
+    nx = 'nx=' + posX
+    ny = 'ny=' + posY
 
     params = '?' + serviceKey + '&' + baseDate + '&' + baseTime + '&' + nx + '&' + ny + '&numOfRows=200&pageNo=1'
     request = urllib.request.Request(url + params)
@@ -68,13 +68,13 @@ def parseFcstPerTime():  # 동네예보조회 xml 파싱
         tree = ElementTree.fromstring( str(dom.toxml()))
         return tree
 
-def getMiddleLandWeather():     # 중기육상예보 xml (3일~10일 후 예보 정보 구름많음 등..)
+def getMiddleLandWeather(areaCode):     # 중기육상예보 xml (3일~10일 후 예보 정보 구름많음 등..)
     url = 'http://newsky2.kma.go.kr/service/MiddleFrcstInfoService/getMiddleLandWeather'
     queryParams = '?' + 'ServiceKey=8KngOJTE%2Fh%2BjNJwkeXlJsC5d1ShWfQ9YadkSpoLeubDe9cekkO44ShcRAra7hjTk%2BYAzJEui5eYPFVGegxUngw%3D%3D' +\
         '&regId=11B00000&tmFc=201905230600&numOfRows=10&pageNo=1'
 
     ServiceKey = 'ServiceKey=8KngOJTE%2Fh%2BjNJwkeXlJsC5d1ShWfQ9YadkSpoLeubDe9cekkO44ShcRAra7hjTk%2BYAzJEui5eYPFVGegxUngw%3D%3D'
-    regId = 'regId=' + '11B00000'
+    regId = 'regId=' + areaCode
     tmFc = 'tmFc=' + '201905260600' #time.strftime('%Y%m%d0600', time.localtime())
     numOfRows='numOfRows=10'
     pageNo = 'pageNo=1'
@@ -100,13 +100,13 @@ def getMiddleLandWeather():     # 중기육상예보 xml (3일~10일 후 예보 
         return tree
 
 
-def getMiddleTemperature():         # 중기기온조회 xml
+def getMiddleTemperature(areaCode):         # 중기기온조회 xml
     url = 'http://newsky2.kma.go.kr/service/MiddleFrcstInfoService/getMiddleTemperature'
     queryParams = '?' + 'ServiceKey=8KngOJTE%2Fh%2BjNJwkeXlJsC5d1ShWfQ9YadkSpoLeubDe9cekkO44ShcRAra7hjTk%2BYAzJEui5eYPFVGegxUngw%3D%3D' + \
                   '&regId=11B10101&tmFc=201905230600'
 
     ServiceKey = 'ServiceKey=8KngOJTE%2Fh%2BjNJwkeXlJsC5d1ShWfQ9YadkSpoLeubDe9cekkO44ShcRAra7hjTk%2BYAzJEui5eYPFVGegxUngw%3D%3D'
-    regId = 'regId=' + '11B10101'
+    regId = 'regId=' + areaCode
     tmFc = 'tmFc='+ '201905260600'#time.strftime('%Y%m%d0600', time.localtime())
 
     param = '?' + ServiceKey + '&' + regId + '&' + tmFc
@@ -128,12 +128,11 @@ def getMiddleTemperature():         # 중기기온조회 xml
         tree = ElementTree.fromstring(str(dom.toxml()))
         return tree
 
-def getUltrvLifeList():        # 체감온도 xml
+def getUltrvLifeList(areaCode):        # 체감온도 xml
     url = 'http://newsky2.kma.go.kr/iros/RetrieveLifeIndexService3/getUltrvLifeList'
 
     ServiceKey = 'ServiceKey=8KngOJTE%2Fh%2BjNJwkeXlJsC5d1ShWfQ9YadkSpoLeubDe9cekkO44ShcRAra7hjTk%2BYAzJEui5eYPFVGegxUngw%3D%3D'
-    areaNo = 1100000000
-    areaNo = 'areaNo=' + str(areaNo)
+    areaNo = 'areaNo=' + areaCode
     now = 'time='+ time.strftime('%Y%m%d%H', time.localtime())
     params = '?' + ServiceKey + '&' + areaNo + '&' + now
     request = urllib.request.Request(url + params)
@@ -179,18 +178,24 @@ def CityAirPollution():                 # 시,도별 대기오염지수 xml
 
 
 class Parser:
-    def __init__(self):
-        self.TimeFcstDocument = parseFcstPerTime()
-        self.DaysWeatherDoc = getMiddleLandWeather()
-        self.DaysTemperatureDoc = getMiddleTemperature()
-        self.UVDoc = getUltrvLifeList()
+    def __init__(self, key):
+        self.key = key
+        self.area = localDict[self.key]
+        self.x, self.y = self.area[0]
+        self.TimeFcstDocument = parseFcstPerTime(self.x, self.y)
+        self.DaysWeatherDoc = getMiddleLandWeather(self.area[1])
+        self.DaysTemperatureDoc = getMiddleTemperature(self.area[2])
+        self.UVDoc = getUltrvLifeList(self.area[3])
         self.APDoc = CityAirPollution()
 
-    def update(self):
-        self.TimeFcstDocument = parseFcstPerTime()
-        self.DaysWeatherDoc = getMiddleLandWeather()
-        self.DaysTemperatureDoc = getMiddleTemperature()
-        self.UVDoc = getUltrvLifeList()
+    def update(self, key):
+        self.key = key
+        self.area = localDict[self.key]
+        self.x, self.y = self.area[0]
+        self.TimeFcstDocument = parseFcstPerTime(self.x, self.y)
+        self.DaysWeatherDoc = getMiddleLandWeather(self.area[1])
+        self.DaysTemperatureDoc = getMiddleTemperature(self.area[2])
+        self.UVDoc = getUltrvLifeList(self.area[3])
         self.APDoc = CityAirPollution()
 
     def getTimeFcst(self):
@@ -205,4 +210,4 @@ class Parser:
     def getAPFcst(self):
         return self.APDoc
 
-parsed = Parser()
+parsed = Parser("부산광역시")

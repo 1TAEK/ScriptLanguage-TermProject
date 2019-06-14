@@ -9,6 +9,8 @@ from client import airFresh
 
 from utils import email
 
+from server.parseXMLs import parsed
+
 class FragmentManager():
     pass
 
@@ -67,6 +69,8 @@ class Main():
         self.mAirFresh = airFresh.AirFresh()
 
     def search(self):
+        key = input("지역명을 검색하세요")
+        parsed.update(key)
         pass
     def bookmark(self):
         pass
