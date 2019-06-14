@@ -23,7 +23,7 @@ class OverviewS:
             closeTime = '1500'
         elif '1800' <= now < '2100':
             closeTime = '1800'
-        elif '2100' <= now < '0000':
+        elif '2100' <= now < '2359':
             closeTime = '2100'
 
         return closeTime
