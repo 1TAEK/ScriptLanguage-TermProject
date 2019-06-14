@@ -71,7 +71,7 @@ class Main():
     def search(self):
         key = input("지역명을 검색하세요")
         parsed.update(key)
-        pass
+        
     def bookmark(self):
         pass
     def email(self):

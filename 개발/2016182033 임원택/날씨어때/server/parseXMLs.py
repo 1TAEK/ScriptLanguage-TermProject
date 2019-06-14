@@ -13,7 +13,6 @@ from server.localCodes import localDict
 # base_date = time.strftime('%Y%m%d', time.localtime())
 base_time = time.strftime('%H', time.localtime()) + '00'
 
-
 def get_baseDateAndTime():          # 동네예보 base_date, base_time 반환하는 함수
     base_date = time.strftime('%Y%m%d', time.localtime())
     base_time = time.strftime('%H', time.localtime()) + '00'
@@ -210,4 +209,4 @@ class Parser:
     def getAPFcst(self):
         return self.APDoc
 
-parsed = Parser("부산광역시")
+parsed = Parser("경기도 시흥시")
