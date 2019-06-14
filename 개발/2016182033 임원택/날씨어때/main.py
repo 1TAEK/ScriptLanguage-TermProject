@@ -7,6 +7,8 @@ from client import timeToWeather
 from client import dayToWeather
 from client import airFresh
 
+from utils import email
+
 class FragmentManager():
     pass
 
@@ -69,7 +71,7 @@ class Main():
     def bookmark(self):
         pass
     def email(self):
-        pass
+        email.Email(self.mOverview.sendInfo())
     def home(self):
         pass
     def refresh(self):

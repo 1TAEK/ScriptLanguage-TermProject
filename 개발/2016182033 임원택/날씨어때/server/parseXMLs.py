@@ -3,7 +3,7 @@ import urllib.parse
 from xml.dom.minidom import parseString
 from xml.etree import ElementTree
 import time
-from server.localCodes import localDict
+# from server.localCodes import localDict
 # 동네예보 xml은 base_date를 넘겨줘야함.
 # 2019.05.17 : 필요한 Open API 파싱 완료.
 #              하지만 옵션들 고정적인게 아니라 현재 또는 원하는 date, time 지정해줄 수 있어야 하기 때문에 수정이 필요함.
@@ -179,7 +179,7 @@ def CityAirPollution():                 # 시,도별 대기오염지수 xml
 
 
 class Parser:
-    def __init__(self, ):
+    def __init__(self):
         self.TimeFcstDocument = parseFcstPerTime()
         self.DaysWeatherDoc = getMiddleLandWeather()
         self.DaysTemperatureDoc = getMiddleTemperature()
