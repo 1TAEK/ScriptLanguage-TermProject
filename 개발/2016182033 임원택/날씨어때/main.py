@@ -15,6 +15,8 @@ from utils import bookmark
 
 from server.parseXMLs import parsed
 
+from teller import tellerMain
+
 class FragmentManager():
     pass
 
@@ -56,19 +58,15 @@ class Main():
         Button(self.mMenuFrame,text = "E-Mail",width = menuButtonwidth, command = self.email).grid(row=0, column=2, padx = 4, pady=4)
         Button(self.mMenuFrame,text = "Home",width = menuButtonwidth, command= self.home).grid(row=0, column=3, padx = 4, pady=4)
         Button(self.mMenuFrame,text = "갱신",width = menuButtonwidth, command = self.refresh).grid(row=0, column=4,padx = 4, pady=4)
-        self.mCurlocation = parsed.getKey()
-        self.mCurlocationLabel = None
-        if spam.strlen(self.mCurlocation):
-            self.mCurlocationLabel = Label(self.mMenuFrame,text = self.mCurlocation,bg=self.mBackgroundColor,fg="green")
-            self.mCurlocationLabel.grid(row=1, column=2, pady=10)
-        else:
-            self.mCurlocationLabel = Label(self.mMenuFrame,text = "지역없음",bg=self.mBackgroundColor,fg="green")
-            self.mCurlocationLabel.grid(row=1, column=2, pady=10)
+
 
         # Scroll 관련 주석
         # self.mScrollLayout = scrollLayout.ScrollLayout(self.mWindow, (0, 0, 400, 2400))
         # self.mScrollLayout.pack()
         # self.mScrollLayout.addFrame(self.mMainFrame)
+
+        # telegram
+        self.mTeller = tellerMain.Teller(self.mOverview)
 
     def TTW(self):
         # TimeToWeather Frame 시간별 날씨 프레임
@@ -98,9 +96,6 @@ class Main():
         pass
     def refresh(self):
         self.mOverview.update()
-        self.mCurlocation = parsed.getKey()
-        self.mCurlocationLabel.configure(text = self.mCurlocation)
-
 
     def main(self):
         self.mWindow.mainloop()

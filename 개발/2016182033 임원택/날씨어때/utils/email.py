@@ -40,7 +40,7 @@ class Email():
         s.ehlo()
         s.starttls()
         s.ehlo()
-        s.login("aldald1318@gmail.com",passwd)
+        s.login(senderAddr,passwd)
         s.sendmail(senderAddr , [recipientAddr], msg.as_string())
         s.close()
         print("Mail sending complete!!")

@@ -5,6 +5,11 @@ from datetime import datetime
 from server import overviewS
 from common import time
 
+import spam
+
+from server.parseXMLs import parsed
+
+
 class Overview:
     def setWeather(self):
         dicData = self.mParamDataList.getSpaceFcstData()
@@ -96,6 +101,7 @@ class Overview:
 
     def __init__(self,frame):
         # Param
+        self.mCurlocation = parsed.getKey()
         self.mParamDate = time.Time().mTimeTotal
         self.mParamWeather = ""
         self.mParamTemperature = ""
@@ -115,11 +121,16 @@ class Overview:
         # self.mParamWeather = PhotoImage(file = "sunny.gif",width = 100, height = 100)
 
         # Font, BackgroundColor
+        self.mFontLocation = font.Font(family = "08SeoulHangangL_0",size = 20)
         self.mFontDate = font.Font(family = "08SeoulHangangL_0",size = 10)
         self.mFontTemp = font.Font(family = "08SeoulHangangL_0",size = 30)
         self.mFontSubTemp = font.Font(family = "08SeoulHangangL_0",size = 12)
         self.mFontText = font.Font(family = "08SeoulHangangL_0",size = 12)
         self.mBackgroundColor = '#%02x%02x%02x' % (224, 255, 255)
+
+        # Location
+        self.mTxtLocation = Label(frame, text = self.mCurlocation,font=self.mFontLocation,bg = self.mBackgroundColor,fg="green")
+        self.mTxtLocation.pack(pady = 15)
 
         # Date
         self.mTxtDate = Label(frame, text = self.mParamDate,font=self.mFontDate,bg = self.mBackgroundColor,fg="blue")
@@ -162,8 +173,10 @@ class Overview:
         self.setHighRowTemp()
         self.setUVRays()
         self.setDesc()
+        self.mCurlocation = parsed.getKey()
 
         # Label 적용
+        self.mTxtLocation.configure(text = self.mCurlocation)
         self.mTxtDate.configure(text = self.mParamDate)
         self.mImgWeather.configure(image = self.mParamWeather)
         self.mTxtTemperature.configure(text = self.mParamTemperature)

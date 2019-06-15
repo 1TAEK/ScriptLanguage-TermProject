@@ -50,6 +50,7 @@ def parseFcstPerTime(posX, posY):  # 동네예보조회 xml 파싱
     ny = 'ny=' + posY
 
     params = '?' + serviceKey + '&' + baseDate + '&' + baseTime + '&' + nx + '&' + ny + '&numOfRows=200&pageNo=1'
+
     request = urllib.request.Request(url + params)
 
     try:
@@ -198,6 +199,15 @@ class Parser:
         self.UVDoc = getUltrvLifeList(self.area[3])
         self.APDoc = CityAirPollution()
 
+    def recieveTeleInfo(self,key):
+        area = self.areaObj.areas[self.key]
+        x, y = self.area[0]
+        TimeFcstDocument = parseFcstPerTime(x, y)
+        DaysWeatherDoc = getMiddleLandWeather(area[1])
+        DaysTemperatureDoc = getMiddleTemperature(area[2])
+        UVDoc = getUltrvLifeList(area[3])
+        APDoc = CityAirPollution()
+
     def getTimeFcst(self):
         return self.TimeFcstDocument
 
@@ -212,5 +222,6 @@ class Parser:
 
     def getKey(self):
         return self.key
+
 
 parsed = Parser("경기도 시흥시")
