@@ -75,7 +75,8 @@ def getMiddleLandWeather(areaCode):     # 중기육상예보 xml (3일~10일 후
 
     ServiceKey = 'ServiceKey=8KngOJTE%2Fh%2BjNJwkeXlJsC5d1ShWfQ9YadkSpoLeubDe9cekkO44ShcRAra7hjTk%2BYAzJEui5eYPFVGegxUngw%3D%3D'
     regId = 'regId=' + areaCode
-    tmFc = 'tmFc=' + '201905260600' #time.strftime('%Y%m%d0600', time.localtime())
+    tmFc , notUsing = get_baseDateAndTime()
+    tmFc = 'tmFc=' + tmFc + '0600'
     numOfRows='numOfRows=10'
     pageNo = 'pageNo=1'
 
@@ -102,12 +103,10 @@ def getMiddleLandWeather(areaCode):     # 중기육상예보 xml (3일~10일 후
 
 def getMiddleTemperature(areaCode):         # 중기기온조회 xml
     url = 'http://newsky2.kma.go.kr/service/MiddleFrcstInfoService/getMiddleTemperature'
-    queryParams = '?' + 'ServiceKey=8KngOJTE%2Fh%2BjNJwkeXlJsC5d1ShWfQ9YadkSpoLeubDe9cekkO44ShcRAra7hjTk%2BYAzJEui5eYPFVGegxUngw%3D%3D' + \
-                  '&regId=11B10101&tmFc=201905230600'
-
     ServiceKey = 'ServiceKey=8KngOJTE%2Fh%2BjNJwkeXlJsC5d1ShWfQ9YadkSpoLeubDe9cekkO44ShcRAra7hjTk%2BYAzJEui5eYPFVGegxUngw%3D%3D'
     regId = 'regId=' + areaCode
-    tmFc = 'tmFc='+ '201905260600'#time.strftime('%Y%m%d0600', time.localtime())
+    tmFc, notUsing = get_baseDateAndTime()
+    tmFc = 'tmFc=' + tmFc + '0600'
 
     param = '?' + ServiceKey + '&' + regId + '&' + tmFc
 
@@ -124,7 +123,7 @@ def getMiddleTemperature(areaCode):         # 중기기온조회 xml
         xml = resp.read()
         print("중기온도 XML Document loading complete.")
         dom = parseString(xml)
-        # print(dom.toprettyxml())
+        print(dom.toprettyxml())
         tree = ElementTree.fromstring(str(dom.toxml()))
         return tree
 
@@ -184,8 +183,8 @@ class Parser:
         self.area = self.areaObj.areas[self.key]
         self.x, self.y = self.area[0]
         self.TimeFcstDocument = parseFcstPerTime(self.x, self.y)
-        self.DaysWeatherDoc = getMiddleLandWeather(self.area[1])
-        self.DaysTemperatureDoc = getMiddleTemperature(self.area[2])
+        self.DaysWeatherDoc = getMiddleLandWeather(self.area[2])
+        self.DaysTemperatureDoc = getMiddleTemperature(self.area[1])
         self.UVDoc = getUltrvLifeList(self.area[3])
         self.APDoc = CityAirPollution()
 
@@ -194,8 +193,8 @@ class Parser:
         self.area = self.areaObj.areas[self.key]
         self.x, self.y = self.area[0]
         self.TimeFcstDocument = parseFcstPerTime(self.x, self.y)
-        self.DaysWeatherDoc = getMiddleLandWeather(self.area[1])
-        self.DaysTemperatureDoc = getMiddleTemperature(self.area[2])
+        self.DaysWeatherDoc = getMiddleLandWeather(self.area[2])
+        self.DaysTemperatureDoc = getMiddleTemperature(self.area[1])
         self.UVDoc = getUltrvLifeList(self.area[3])
         self.APDoc = CityAirPollution()
 
