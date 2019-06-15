@@ -1,4 +1,6 @@
 from tkinter import*
+from tkinter import messagebox
+import spam
 
 from common import scrollLayout
 
@@ -8,6 +10,8 @@ from client import dayToWeather
 from client import airFresh
 
 from utils import email
+from utils import search
+from utils import bookmark
 
 from server.parseXMLs import parsed
 
@@ -19,6 +23,7 @@ class Main():
         self.mWindowWidth = 400
         self.mWindowHeight = 400
         self.mBackgroundColor = '#%02x%02x%02x' % (224, 255, 255)
+        self.mSearch = None
 
         # Init Window
         self.mWindow = Tk()
@@ -51,7 +56,14 @@ class Main():
         Button(self.mMenuFrame,text = "E-Mail",width = menuButtonwidth, command = self.email).grid(row=0, column=2, padx = 4, pady=4)
         Button(self.mMenuFrame,text = "Home",width = menuButtonwidth, command= self.home).grid(row=0, column=3, padx = 4, pady=4)
         Button(self.mMenuFrame,text = "갱신",width = menuButtonwidth, command = self.refresh).grid(row=0, column=4,padx = 4, pady=4)
-        Button(self.mMenuFrame,text = "지역",width = menuButtonwidth, command = self.location).grid(row=1, column=2, pady=10)
+        self.mCurlocation = parsed.getKey()
+        self.mCurlocationLabel = None
+        if spam.strlen(self.mCurlocation):
+            self.mCurlocationLabel = Label(self.mMenuFrame,text = self.mCurlocation,bg=self.mBackgroundColor,fg="green")
+            self.mCurlocationLabel.grid(row=1, column=2, pady=10)
+        else:
+            self.mCurlocationLabel = Label(self.mMenuFrame,text = "지역없음",bg=self.mBackgroundColor,fg="green")
+            self.mCurlocationLabel.grid(row=1, column=2, pady=10)
 
         # Scroll 관련 주석
         # self.mScrollLayout = scrollLayout.ScrollLayout(self.mWindow, (0, 0, 400, 2400))
@@ -69,19 +81,26 @@ class Main():
         self.mAirFresh = airFresh.AirFresh()
 
     def search(self):
-        key = input("지역명을 검색하세요")
-        parsed.update(key)
-        
+        self.mSearch = search.Search(parsed.areaObj.getAreaList())
+
     def bookmark(self):
-        pass
+        if self.mSearch:
+            if self.mSearch.getBookmark():
+                self.mBookmark = bookmark.Bookmark(self.mSearch.getBookmark())
+            else:
+                messagebox.showinfo("오류","저장된 북마크가 없습니다.")
+        else:
+            messagebox.showinfo("오류","저장된 북마크가 없습니다.")
+
     def email(self):
         email.Email(self.mOverview.sendInfo())
     def home(self):
         pass
     def refresh(self):
         self.mOverview.update()
-    def location(self):
-        pass
+        self.mCurlocation = parsed.getKey()
+        self.mCurlocationLabel.configure(text = self.mCurlocation)
+
 
     def main(self):
         self.mWindow.mainloop()
