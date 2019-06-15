@@ -3,7 +3,7 @@ import urllib.parse
 from xml.dom.minidom import parseString
 from xml.etree import ElementTree
 import time
-from server.localCodes import localDict
+from server.localCodes import Areas
 # 동네예보 xml은 base_date를 넘겨줘야함.
 # 2019.05.17 : 필요한 Open API 파싱 완료.
 #              하지만 옵션들 고정적인게 아니라 현재 또는 원하는 date, time 지정해줄 수 있어야 하기 때문에 수정이 필요함.
@@ -12,6 +12,7 @@ from server.localCodes import localDict
 # 2019.05.24 : get_baseDateAndTime 함수 수정
 # base_date = time.strftime('%Y%m%d', time.localtime())
 base_time = time.strftime('%H', time.localtime()) + '00'
+
 
 def get_baseDateAndTime():          # 동네예보 base_date, base_time 반환하는 함수
     base_date = time.strftime('%Y%m%d', time.localtime())
@@ -178,8 +179,9 @@ def CityAirPollution():                 # 시,도별 대기오염지수 xml
 
 class Parser:
     def __init__(self, key):
+        self.areaObj = Areas()
         self.key = key
-        self.area = localDict[self.key]
+        self.area = self.areaObj.areas[self.key]
         self.x, self.y = self.area[0]
         self.TimeFcstDocument = parseFcstPerTime(self.x, self.y)
         self.DaysWeatherDoc = getMiddleLandWeather(self.area[1])
@@ -189,7 +191,7 @@ class Parser:
 
     def update(self, key):
         self.key = key
-        self.area = localDict[self.key]
+        self.area = self.areaObj.areas[self.key]
         self.x, self.y = self.area[0]
         self.TimeFcstDocument = parseFcstPerTime(self.x, self.y)
         self.DaysWeatherDoc = getMiddleLandWeather(self.area[1])
@@ -209,4 +211,4 @@ class Parser:
     def getAPFcst(self):
         return self.APDoc
 
-parsed = Parser("경기도 시흥시")
+parsed = Parser("서울특별시 종로구")
