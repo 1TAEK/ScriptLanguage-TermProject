@@ -1,6 +1,5 @@
 from server.parseXMLs import parsed
 
-
 class FcstAirPollution:
     def __init__(self):
         self.tree = parsed.getAPFcst()

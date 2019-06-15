@@ -210,4 +210,7 @@ class Parser:
     def getAPFcst(self):
         return self.APDoc
 
-parsed = Parser("서울특별시 종로구")
+    def getKey(self):
+        return self.key
+
+parsed = Parser("경기도 시흥시")
